@@ -1,0 +1,186 @@
+===============================================================
+       NOTIONS IMPORTANTES - CPP MODULE 07 : Templates
+===============================================================
+
+---------------------------------------------------------------
+1. C'EST QUOI UN TEMPLATE ?
+---------------------------------------------------------------
+
+Un template permet d'écrire du code générique qui fonctionne
+avec n'importe quel type. Le compilateur génère automatiquement
+la version pour chaque type utilisé.
+
+Mot-clé : template <typename T>
+  T est un paramètre de type remplacé à la compilation.
+
+Pourquoi ?
+- Evite la duplication de code (pas besoin d'un swap(int),
+  swap(float), swap(string) séparément).
+- Typage fort : le compilateur vérifie les types.
+
+---------------------------------------------------------------
+2. TEMPLATE DE FONCTION (ex00)
+---------------------------------------------------------------
+
+Déclaration et définition OBLIGATOIREMENT dans le .hpp :
+
+    template <typename T>
+    void swap(T & a, T & b)
+    {
+        T tmp = a;
+        a = b;
+        b = tmp;
+    }
+
+Appel : le compilateur déduit T automatiquement :
+    int a = 1, b = 2;
+    swap(a, b);          // T = int, déduit
+    swap<int>(a, b);     // T = int, explicite
+
+Contrainte : les deux arguments doivent être du MÊME type.
+Si les types diffèrent -> erreur de compilation.
+
+---------------------------------------------------------------
+3. TEMPLATE DE CLASSE (ex02)
+---------------------------------------------------------------
+
+Même principe que les fonctions, mais pour une classe entière.
+
+    template <typename T>
+    class Array
+    {
+    public:
+        Array(unsigned int n);
+        T & operator[](unsigned int index);
+        unsigned int size() const;
+    private:
+        T *           _data;
+        unsigned int  _size;
+    };
+
+Instanciation :
+    Array<int>    tableauInt(5);
+    Array<std::string> tableauStr(3);
+
+Chaque instanciation génère une classe distincte à la compilation.
+
+---------------------------------------------------------------
+4. FICHIER .tpp
+---------------------------------------------------------------
+
+Pour les templates de classe, l'implémentation doit être visible
+par le compilateur au moment de l'instanciation.
+=> On peut mettre l'implémentation dans un fichier .tpp inclus
+   à la fin du .hpp :
+
+    // Array.hpp
+    template <typename T>
+    class Array { ... };
+
+    # include "Array.tpp"   // en bas du .hpp
+
+    // Array.tpp
+    template <typename T>
+    Array<T>::Array(unsigned int n) : _data(new T[n]()), _size(n) {}
+
+Attention : le .tpp n'est PAS compilé séparément, il est inclus.
+Ne pas l'ajouter dans les SRCS du Makefile.
+
+---------------------------------------------------------------
+5. INITIALISATION PAR DÉFAUT : new T[n]()
+---------------------------------------------------------------
+
+    int * a = new int();    // *a = 0 (value-initialized)
+    int * b = new int[5](); // b[0]...b[4] = 0
+
+Les parenthèses () après new T[n] déclenchent la
+"value-initialization" :
+- types primitifs (int, float...) : initialisés à 0
+- classes : appel du constructeur par défaut
+
+Sans les () :
+    int * c = new int[5]; // valeurs indéterminées (garbage)
+
+---------------------------------------------------------------
+6. COPIE PROFONDE vs COPIE SUPERFICIELLE
+---------------------------------------------------------------
+
+Superficielle (shallow copy) : copie le pointeur.
+  -> Les deux objets pointent sur le même tableau.
+  -> Modifier l'un modifie l'autre. Double-free à la destruction.
+
+Profonde (deep copy) : alloue un nouveau tableau et copie les données.
+  -> Chaque objet est indépendant.
+
+Pour Array<T> :
+    Array<T>::Array(Array const & other)
+        : _data(new T[other._size]()), _size(other._size)
+    {
+        for (unsigned int i = 0; i < _size; i++)
+            _data[i] = other._data[i];
+    }
+
+Règle : dès qu'une classe a un attribut pointeur, il faut
+implémenter manuellement le copy constructor et operator=.
+
+---------------------------------------------------------------
+7. ITER ET POINTEUR DE FONCTION TEMPLATE (ex01)
+---------------------------------------------------------------
+
+iter prend un tableau, sa taille, et une FONCTION à appliquer :
+
+    template <typename T, typename F>
+    void iter(T * array, size_t const len, F func)
+    {
+        for (size_t i = 0; i < len; i++)
+            func(array[i]);
+    }
+
+- T peut être const ou non-const : déterminé par le tableau passé.
+  Si T = const int, func reçoit des const int& -> pas de modif.
+  Si T = int, func reçoit des int& -> modification possible.
+
+- F est le type de la fonction/callable (fonction libre, template...).
+
+Passer une fonction template comme argument :
+    iter(tab, 5, printElement<int>);  // instanciation explicite
+
+---------------------------------------------------------------
+8. SURCHARGE DE operator[]
+---------------------------------------------------------------
+
+Toujours fournir les deux versions (const et non-const) :
+
+    T &       operator[](unsigned int index);        // lecture + écriture
+    T const & operator[](unsigned int index) const;  // lecture seule
+
+La version const est appelée sur un objet const :
+    Array<int> const a(5);
+    int val = a[0];   // appelle la version const
+
+---------------------------------------------------------------
+9. throw std::out_of_range
+---------------------------------------------------------------
+
+Pour signaler un accès hors limites :
+
+    # include <stdexcept>
+
+    if (index >= _size)
+        throw std::out_of_range("Array: index out of bounds");
+
+std::out_of_range hérite de std::exception -> catchable avec :
+    catch (std::exception & e) { std::cerr << e.what(); }
+
+---------------------------------------------------------------
+RÉSUMÉ RAPIDE
+---------------------------------------------------------------
+
+    ex00 : template <typename T> -> fonctions génériques (swap/min/max)
+    ex01 : iter -> parcours générique de tableau avec fonction
+    ex02 : class template + .tpp + deep copy + operator[]
+
+    Règle d'or : implémentation template TOUJOURS visible du
+    compilateur -> dans le .hpp ou dans un .tpp inclus dedans.
+
+===============================================================

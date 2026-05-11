@@ -1,0 +1,32 @@
+# Build artifacts
+*.o
+*.a
+*.d
+
+# Executables
+aform
+array
+bureaucrat
+convert
+easyfind
+form
+identify
+intern
+iter
+mutantstack
+serializer
+span
+whatever
+
+# ShrubberyCreationForm output
+*_shrubbery
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/

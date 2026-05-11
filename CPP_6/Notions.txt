@@ -1,0 +1,255 @@
+===============================================================
+       NOTIONS IMPORTANTES - CPP MODULE 06 : C++ Casts
+===============================================================
+
+---------------------------------------------------------------
+1. LES 4 TYPES DE CASTS C++
+---------------------------------------------------------------
+
+En C++, il existe 4 opérateurs de cast explicites qui remplacent
+le cast C-style ((int)x ou (float)y).
+
+  static_cast<T>(expr)       -> conversion statique, vérifiée à la compilation
+  dynamic_cast<T>(expr)      -> conversion dynamique, vérifiée à l'exécution
+  reinterpret_cast<T>(expr)  -> réinterprétation brute des bits
+  const_cast<T>(expr)        -> ajoute ou retire le qualificateur const
+
+Le cast C-style est interdit dans ce module car il contourne
+les vérifications et mélange les sémantiques des 4 casts ci-dessus.
+
+---------------------------------------------------------------
+2. static_cast
+---------------------------------------------------------------
+
+Utilisation : conversions connues à la compilation entre types
+compatibles ou liés par héritage.
+
+    int nombre = 42;
+    float valeur = static_cast<float>(nombre);   // int -> float
+
+    Base* ptr = static_cast<Base*>(derived_ptr); // upcast sûr
+    Derived* d = static_cast<Derived*>(base_ptr); // downcast sans vérif
+
+Cas d'usage dans CPP_6 :
+- Convertir entre char, int, float, double dans ScalarConverter
+- NE PAS utiliser pour downcaster en présence de polymorphisme
+  (préférer dynamic_cast à la place)
+
+Attention : static_cast ne vérifie PAS si le downcast est valide.
+Si le type réel n'est pas Derived, comportement indéfini.
+
+---------------------------------------------------------------
+3. dynamic_cast
+---------------------------------------------------------------
+
+Utilisation : downcast sûr dans une hiérarchie polymorphique.
+Nécessite que la classe de base ait AU MOINS une fonction virtuelle
+(pour que le RTTI soit activé).
+
+    Base* ptr = new Derived();
+    Derived* d = dynamic_cast<Derived*>(ptr);
+    if (d != NULL)
+        std::cout << "C'est bien un Derived" << std::endl;
+
+Comportement :
+- Sur pointeur : retourne NULL si le cast échoue
+- Sur référence : lance std::bad_cast si le cast échoue
+
+    try
+    {
+        Derived & ref = dynamic_cast<Derived &>(base_ref);
+    }
+    catch (std::bad_cast & e)
+    {
+        std::cerr << "Cast échoué : " << e.what() << std::endl;
+    }
+
+Cas d'usage dans CPP_6 :
+- Exercise 02 : identifier le type réel de A, B ou C via dynamic_cast
+- La version avec pointeur permet de tester NULL sans exception
+- La version avec référence force l'utilisation de try/catch
+
+---------------------------------------------------------------
+4. reinterpret_cast
+---------------------------------------------------------------
+
+Utilisation : réinterprétation brute de la mémoire, sans aucune
+conversion. Transforme un pointeur en entier ou vice-versa.
+
+    Data* ptr = new Data();
+    uintptr_t raw = reinterpret_cast<uintptr_t>(ptr);
+    Data* restored = reinterpret_cast<Data*>(raw);
+
+Cas d'usage dans CPP_6 :
+- Exercise 01 : sérialiser/désérialiser un pointeur Data*
+- Jamais utiliser pour des conversions numériques ordinaires
+- Uniquement quand on a besoin de traiter des pointeurs comme
+  des entiers (sérialisation, protocoles bas niveau)
+
+Danger : comportement indéfini si on réinterprète vers un type
+incompatible avec l'alignement ou la taille d'origine.
+
+---------------------------------------------------------------
+5. const_cast
+---------------------------------------------------------------
+
+Utilisation : retirer (ou ajouter) le qualificateur const d'un
+pointeur ou d'une référence.
+
+    const char* const_str = "hello";
+    char* mutable_str = const_cast<char*>(const_str);
+
+Attention : modifier un objet réellement const via const_cast
+est un comportement indéfini. Utiliser uniquement quand on sait
+que l'objet original n'est pas const (API ancienne mal écrite).
+
+Non utilisé directement dans CPP_6 mais fait partie des 4 casts.
+
+---------------------------------------------------------------
+6. LES PSEUDO-LITTÉRAUX (nan, inf, etc.)
+---------------------------------------------------------------
+
+Les flottants IEEE 754 définissent des valeurs spéciales :
+
+  NaN (Not a Number) : résultat d'opérations indéfinies (0.0/0.0)
+  +Inf / -Inf        : dépassement de capacité (1.0/0.0)
+
+En C++98, on les détecte avec les fonctions de <cmath> :
+
+    #include <cmath>
+
+    std::isnan(valeur)   -> true si NaN
+    std::isinf(valeur)   -> true si +Inf ou -Inf
+
+Littéraux reconnaissables dans l'exercice 00 :
+    float  : "nanf", "+inff", "-inff"
+    double : "nan",  "+inf",  "-inf"
+
+Pour l'affichage :
+    float nan   -> "nanf"
+    float inf   -> "+inff" ou "-inff"
+    double nan  -> "nan"
+    double inf  -> "+inf"  ou "-inf"
+
+Quand NaN ou Inf, char et int sont "impossible" car pas convertibles.
+
+---------------------------------------------------------------
+7. uintptr_t ET SÉRIALISATION
+---------------------------------------------------------------
+
+uintptr_t est un entier non signé garanti assez grand pour
+stocker n'importe quel pointeur sans perte d'information.
+Il est défini dans <stdint.h> (ou <cstdint> en C++11).
+
+    #include <stdint.h>
+
+    uintptr_t raw = reinterpret_cast<uintptr_t>(ptr);
+    // raw contient l'adresse mémoire du pointeur sous forme entière
+
+La sérialisation consiste à transformer un pointeur en entier
+(pour stockage ou transmission), puis à le restaurer.
+
+Le test de validité :
+    Data* original = new Data();
+    uintptr_t serialized = Serializer::serialize(original);
+    Data* restored = Serializer::deserialize(serialized);
+    // original == restored doit être true (même adresse mémoire)
+
+---------------------------------------------------------------
+8. RTTI - Run-Time Type Information
+---------------------------------------------------------------
+
+Le RTTI (Run-Time Type Information) est le mécanisme C++ qui
+permet d'inspecter le type réel d'un objet polymorphique à
+l'exécution.
+
+Il est activé automatiquement dès qu'une classe a au moins
+une fonction virtuelle (y compris le destructeur).
+
+dynamic_cast utilise le RTTI pour vérifier si un cast est valide.
+typeid (de <typeinfo>) est l'autre outil RTTI, mais il est
+INTERDIT dans l'exercice 02 du module.
+
+Sans RTTI (classe sans virtuelle) :
+    Base* ptr = new Derived();
+    dynamic_cast<Derived*>(ptr);  // ERREUR de compilation
+
+Avec RTTI (destructeur virtuel suffit) :
+    class Base { public: virtual ~Base() {} };
+    // dynamic_cast fonctionne maintenant
+
+---------------------------------------------------------------
+9. CLASSE NON INSTANCIABLE (OCF adapté)
+---------------------------------------------------------------
+
+Pour rendre une classe non instanciable, on met le constructeur
+(et l'opérateur=) en PRIVÉ et on ne les implémente pas.
+
+    class ScalarConverter
+    {
+    public:
+        static void convert(std::string const & literal);
+
+    private:
+        ScalarConverter();
+        ScalarConverter(ScalarConverter const & other);
+        ScalarConverter & operator=(ScalarConverter const & other);
+        ~ScalarConverter();
+    };
+
+Ainsi :
+    ScalarConverter sc;   // ERREUR de compilation
+    ScalarConverter::convert("42");  // OK, méthode statique
+
+Idem pour Serializer dans l'exercice 01.
+
+---------------------------------------------------------------
+10. std::numeric_limits
+---------------------------------------------------------------
+
+std::numeric_limits<T> est un template de <limits> qui donne
+les valeurs extrêmes d'un type numérique.
+
+    #include <limits>
+
+    std::numeric_limits<int>::max()         // INT_MAX (2147483647)
+    std::numeric_limits<int>::min()         // INT_MIN (-2147483648)
+    std::numeric_limits<float>::max()       // FLT_MAX
+    std::numeric_limits<float>::infinity()  // +Inf en float
+    std::numeric_limits<double>::quiet_NaN() // NaN en double
+
+Utile dans ScalarConverter pour vérifier si une valeur est dans
+la plage d'un type avant de faire le cast (overflow detection).
+
+---------------------------------------------------------------
+11. AFFICHAGE DES FLOTTANTS AVEC PRÉCISION
+---------------------------------------------------------------
+
+Pour forcer l'affichage d'au moins une décimale (ex: "42.0f") :
+
+    #include <iomanip>
+
+    std::cout << std::fixed << std::setprecision(1) << 42.0f << "f"
+              << std::endl;
+
+Mais std::fixed force toujours 1 décimale, ce qui peut donner
+"42.000000f" pour setprecision(6). Il faut choisir la précision
+adaptée ou utiliser une logique pour afficher le bon nombre.
+
+Une approche : afficher avec setprecision(1) quand le nombre
+est entier, sinon utiliser la précision par défaut.
+
+Autre approche : utiliser un ostringstream pour construire la
+chaîne et la manipuler avant affichage.
+
+---------------------------------------------------------------
+RÉSUMÉ DES CASTS PAR EXERCICE
+---------------------------------------------------------------
+
+    Exercise 00 : static_cast<char>, static_cast<int>,
+                  static_cast<float>, static_cast<double>
+    Exercise 01 : reinterpret_cast<uintptr_t>, reinterpret_cast<Data*>
+    Exercise 02 : dynamic_cast<A*>, dynamic_cast<B*>, dynamic_cast<C*>
+                  (et versions référence pour la surcharge identify(Base&))
+
+===============================================================

@@ -1,0 +1,293 @@
+===============================================================
+       NOTIONS IMPORTANTES - CPP MODULE 05 : Exceptions
+===============================================================
+
+---------------------------------------------------------------
+1. LES EXCEPTIONS EN C++
+---------------------------------------------------------------
+
+Une exception est un mécanisme pour signaler une erreur à l'exécution.
+On utilise trois mots-clés : throw, try, catch.
+
+  throw    -> lance une exception (un objet)
+  try      -> bloc de code qui peut lancer une exception
+  catch    -> attrape et gère l'exception
+
+Exemple de base :
+    try
+    {
+        throw std::exception();
+    }
+    catch (std::exception & e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+Règle importante : on catch par RÉFÉRENCE (pas par valeur) pour
+éviter le slicing et permettre le polymorphisme.
+
+---------------------------------------------------------------
+2. std::exception ET what()
+---------------------------------------------------------------
+
+std::exception est la classe de base de toutes les exceptions standard.
+Elle se trouve dans <stdexcept> ou <exception>.
+
+La méthode virtuelle what() retourne une description de l'erreur :
+    virtual const char* what() const throw();
+
+Pour créer sa propre exception, on hérite de std::exception et on
+override what() :
+
+    class MonException : public std::exception
+    {
+    public:
+        virtual const char* what() const throw()
+        {
+            return ("Mon message d'erreur");
+        }
+    };
+
+Note : "const throw()" à la fin signifie que what() ne lancera
+elle-même aucune exception (spécification d'exception C++98).
+
+---------------------------------------------------------------
+3. CLASSES D'EXCEPTIONS IMBRIQUÉES (Nested Exception Classes)
+---------------------------------------------------------------
+
+Dans ce module, les exceptions sont des classes imbriquées dans
+la classe qui les lance. Exemple :
+
+    class Bureaucrat
+    {
+    public:
+        class GradeTooHighException : public std::exception
+        {
+        public:
+            virtual const char* what() const throw();
+        };
+        class GradeTooLowException : public std::exception
+        {
+        public:
+            virtual const char* what() const throw();
+        };
+    };
+
+On les utilise ainsi :
+    throw Bureaucrat::GradeTooHighException();
+
+Et on les catch :
+    catch (Bureaucrat::GradeTooHighException & e) { ... }
+    // ou plus général :
+    catch (std::exception & e) { ... }
+
+Note du sujet : les classes d'exceptions n'ont PAS besoin d'être
+en forme canonique orthodoxe.
+
+---------------------------------------------------------------
+4. FORME CANONIQUE ORTHODOXE (OCF - Orthodox Canonical Form)
+---------------------------------------------------------------
+
+Toute classe (sauf exceptions) doit avoir ces 4 éléments :
+
+    1) Constructeur par défaut
+    2) Constructeur par copie
+    3) Opérateur d'affectation (operator=)
+    4) Destructeur
+
+Pourquoi ?
+- Le constructeur de copie et l'opérateur= évitent les copies
+  superficielles (shallow copy) qui causent des double-free.
+- Le destructeur libère les ressources allouées dynamiquement.
+
+Exemple :
+    class MyClass
+    {
+    public:
+        MyClass();                              // default constructor
+        MyClass(MyClass const & other);         // copy constructor
+        MyClass & operator=(MyClass const & other); // copy assignment
+        ~MyClass();                             // destructor
+    };
+
+Attention aux membres const : si une classe a un attribut const
+(ex: const std::string _name), l'opérateur= ne peut pas le modifier.
+On l'implémente quand même (pour respecter l'OCF) mais on ne
+copie que les membres non-const.
+
+---------------------------------------------------------------
+5. MEMBRES CONST ET LISTE D'INITIALISATION
+---------------------------------------------------------------
+
+Un membre const DOIT être initialisé dans la liste d'initialisation
+du constructeur (pas dans le corps du constructeur) :
+
+    Bureaucrat::Bureaucrat(std::string const & name, int grade)
+        : _name(name), _grade(grade)   // liste d'initialisation
+    {
+        // corps du constructeur
+    }
+
+La liste d'initialisation est aussi plus performante car elle
+initialise directement sans passer par le constructeur par défaut.
+
+Ordre : les membres sont initialisés dans l'ORDRE DE DÉCLARATION
+dans le .hpp, pas dans l'ordre de la liste d'initialisation.
+
+---------------------------------------------------------------
+6. CLASSE ABSTRAITE ET FONCTION VIRTUELLE PURE
+---------------------------------------------------------------
+
+Une classe abstraite ne peut pas être instanciée directement.
+Elle sert de classe de base pour imposer une interface.
+
+On crée une fonction virtuelle pure avec "= 0" :
+
+    class AForm
+    {
+    public:
+        virtual void execute(Bureaucrat const & executor) const = 0;
+    };
+
+- Toute classe qui hérite de AForm DOIT implémenter execute().
+- Si elle ne l'implémente pas, elle est aussi abstraite.
+- On ne peut pas faire : AForm form; (erreur de compilation)
+- On peut faire : AForm* ptr = new ShrubberyCreationForm("home");
+
+Le destructeur d'une classe abstraite doit être virtuel :
+    virtual ~AForm();
+
+Pourquoi ? Pour que le bon destructeur soit appelé lors d'un
+delete sur un pointeur de type AForm* pointant sur une classe dérivée.
+
+---------------------------------------------------------------
+7. HÉRITAGE ET POLYMORPHISME
+---------------------------------------------------------------
+
+Héritage public : la classe dérivée hérite de l'interface publique.
+
+    class ShrubberyCreationForm : public AForm { ... };
+
+Polymorphisme : utiliser un pointeur/référence de la classe de base
+pour manipuler des objets des classes dérivées.
+
+    AForm* form = new RobotomyRequestForm("Bender");
+    form->execute(bureaucrat);   // appelle la bonne version
+    delete form;
+
+virtual : mot-clé qui permet au compilateur de résoudre l'appel
+à la bonne fonction à l'exécution (late binding / dynamic dispatch).
+
+Sans virtual -> early binding : appelle toujours la version de la
+classe de base.
+Avec virtual -> late binding : appelle la version de la classe réelle.
+
+override (C++11) : indique qu'on surcharge une virtuelle de la base.
+Pas disponible en C++98, mais bonne pratique en moderne C++.
+
+---------------------------------------------------------------
+8. SURCHARGE D'OPÉRATEURS (operator<<)
+---------------------------------------------------------------
+
+Pour afficher un objet avec std::cout, on surcharge operator<<.
+C'est une FONCTION LIBRE (pas un membre) car le premier paramètre
+est un std::ostream& :
+
+    std::ostream & operator<<(std::ostream & os, Bureaucrat const & b)
+    {
+        os << b.getName() << ", bureaucrat grade " << b.getGrade() << ".";
+        return (os);
+    }
+
+On retourne l'ostream par référence pour permettre le chaînage :
+    std::cout << b1 << " and " << b2 << std::endl;
+
+---------------------------------------------------------------
+9. GESTION MÉMOIRE - new / delete
+---------------------------------------------------------------
+
+Chaque new doit avoir son delete correspondant pour éviter les
+fuites mémoire.
+
+    AForm* form = new ShrubberyCreationForm("home");
+    // ... utilisation
+    delete form;   // appelle le destructeur virtuel puis libère la mémoire
+
+Pour les tableaux :
+    int* arr = new int[10];
+    delete[] arr;   // delete[] pour les tableaux
+
+Dans ce module, l'Intern::makeForm() retourne un pointeur alloué
+avec new. C'est à l'appelant de faire le delete !
+
+---------------------------------------------------------------
+10. ÉCRITURE DANS UN FICHIER (fstream)
+---------------------------------------------------------------
+
+Pour ShrubberyCreationForm qui écrit un fichier :
+
+    #include <fstream>
+
+    std::ofstream file;
+    file.open("target_shrubbery");
+    if (file.is_open())
+    {
+        file << "  ASCII tree content" << std::endl;
+        file.close();
+    }
+
+---------------------------------------------------------------
+11. RANDOMISATION - rand() / srand()
+---------------------------------------------------------------
+
+Pour RobotomyRequestForm (50% de succès) :
+
+    #include <cstdlib>   // rand(), srand()
+    #include <ctime>     // time()
+
+    srand(time(NULL));            // initialise le générateur (une fois)
+    if (std::rand() % 2 == 0)    // 0 ou 1 aléatoirement
+        std::cout << "Robotomy succeeded!" << std::endl;
+    else
+        std::cout << "Robotomy failed!" << std::endl;
+
+---------------------------------------------------------------
+12. DESIGN PATTERN : FACTORY (pour l'Intern)
+---------------------------------------------------------------
+
+L'Intern::makeForm() doit créer le bon formulaire selon un nom,
+SANS if/else chaînés. La solution élégante : un tableau de structs
+avec pointeurs de fonctions.
+
+    struct FormEntry
+    {
+        std::string name;
+        AForm* (*create)(std::string const &);
+    };
+
+    static AForm* createShrubbery(std::string const & target)
+    {
+        return (new ShrubberyCreationForm(target));
+    }
+    // ...
+
+    FormEntry entries[] = {
+        {"shrubbery creation", &createShrubbery},
+        {"robotomy request",   &createRobotomy},
+        {"presidential pardon", &createPresidential}
+    };
+
+On itère dessus et on compare les noms -> pattern Factory Method.
+
+---------------------------------------------------------------
+RÉSUMÉ DES GRADES DES FORMULAIRES (ex02/ex03)
+---------------------------------------------------------------
+
+    ShrubberyCreationForm  : sign=145, exec=137
+    RobotomyRequestForm    : sign=72,  exec=45
+    PresidentialPardonForm : sign=25,  exec=5
+
+    Rappel grades Bureaucrat : 1 (le plus haut) -> 150 (le plus bas)
+    Incrémenter le grade = diminuer la valeur numérique.
+
+===============================================================

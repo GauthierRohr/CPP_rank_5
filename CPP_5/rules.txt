@@ -1,0 +1,14 @@
+1) Utiliser tabs pour la tabulation.
+2) Faire des retours à la ligne pour chaque accolade.
+ex :
+if (x == 0)
+{
+	return (0);
+}
+
+3) Mettre les valeurs entre parenthèses pour les return.
+4) Faire une déclaration par ligne.
+5) Mettre des commentaires AU DESSUS des fonctions pour les expliquer.
+6) Mettre des commentaires en dessous des sorties de fonctions pour préciser ce que c'est
+7) Utiliser des noms de variables sans trop d'abbréviation.
+8) Factoriser au maximum les fonctions pour avoir : une fonction, une utilité : éviter les fonctions avec trop de lignes

@@ -1,0 +1,186 @@
+===============================================================
+    NOTIONS IMPORTANTES - CPP MODULE 08 : STL Containers & Algorithms
+===============================================================
+
+---------------------------------------------------------------
+1. STL : C'EST QUOI ?
+---------------------------------------------------------------
+
+STL = Standard Template Library. C'est la bibliothèque standard C++
+qui fournit trois composants principaux :
+
+    Containers   -> stockent des données (vector, list, map, stack...)
+    Iterators    -> pointeurs génériques pour parcourir les containers
+    Algorithms   -> fonctions génériques (std::sort, std::find...)
+
+Ce module est le premier où tu as le DROIT d'utiliser STL.
+Tu DOIS l'utiliser, sinon tu perds des points même si ça compile.
+
+---------------------------------------------------------------
+2. CONTENEURS PRINCIPAUX
+---------------------------------------------------------------
+
+std::vector<T>   -> tableau dynamique, accès O(1) par index
+                    #include <vector>
+
+std::list<T>     -> liste doublement chaînée, insertion O(1)
+                    #include <list>
+
+std::deque<T>    -> file double, accès O(1) aux deux extrémités
+                    #include <deque>
+
+std::stack<T>    -> pile LIFO, adapte un deque par défaut
+                    #include <stack>
+                    méthodes : push(), pop(), top(), size(), empty()
+
+std::map<K,V>    -> dictionnaire trié par clé
+                    #include <map>
+
+Tous supportent les itérateurs begin() / end().
+
+---------------------------------------------------------------
+3. ITÉRATEURS
+---------------------------------------------------------------
+
+Un itérateur est un objet qui se comporte comme un pointeur sur
+un élément du conteneur.
+
+    container::iterator        // lecture + écriture
+    container::const_iterator  // lecture seule
+
+Utilisation :
+    std::vector<int>::iterator it = vec.begin();
+    while (it != vec.end())
+    {
+        std::cout << *it << std::endl;  // déréférencement
+        ++it;                           // avancement
+    }
+
+Types d'itérateurs (du moins au plus puissant) :
+    Input / Output    -> lecture ou écriture, avance seulement
+    Forward           -> lecture/écriture, avance seulement
+    Bidirectional     -> + reculer (--)   (list, map)
+    Random Access     -> + saut (+n, -n)  (vector, deque)
+
+---------------------------------------------------------------
+4. ALGORITHMES STL (#include <algorithm>)
+---------------------------------------------------------------
+
+std::find(begin, end, value)
+    -> Retourne un itérateur sur la 1ère occurrence de value,
+       ou end si absent.
+
+std::sort(begin, end)
+    -> Trie le conteneur sur place (nécessite RandomAccess).
+
+std::min_element(begin, end)
+std::max_element(begin, end)
+    -> Retournent des itérateurs sur le min / max.
+
+std::distance(begin, end)
+    -> Retourne le nombre d'éléments entre deux itérateurs.
+       Disponible dans <iterator>.
+
+Exemple :
+    std::vector<int> v = {3,1,4,1,5};
+    std::sort(v.begin(), v.end());
+    int min = *std::min_element(v.begin(), v.end());
+
+---------------------------------------------------------------
+5. TEMPLATE DE FONCTION SUR CONTENEUR (ex00 - easyfind)
+---------------------------------------------------------------
+
+Pour écrire une fonction qui accepte n'importe quel conteneur :
+
+    template <typename T>
+    typename T::iterator easyfind(T & container, int value)
+    {
+        return std::find(container.begin(), container.end(), value);
+    }
+
+- "typename T::iterator" : type dépendant, le mot "typename" est
+  obligatoire pour indiquer au compilateur que c'est un type.
+- Fonctionne avec vector, list, deque... (pas map : valeurs != clés)
+
+---------------------------------------------------------------
+6. VECTOR INSERT AVEC ITÉRATEURS (ex01 - Span::addRange)
+---------------------------------------------------------------
+
+Pour ajouter une plage d'éléments en une seule fois :
+
+    _numbers.insert(_numbers.end(), iteratorBegin, iteratorEnd);
+
+- Copie tous les éléments de [begin, end) à la fin du vector.
+- Beaucoup plus efficace qu'une boucle d'appels à push_back.
+- Fonctionne avec n'importe quel type d'itérateur compatible.
+
+std::distance(begin, end) pour compter avant d'insérer :
+    size_t count = (size_t)std::distance(begin, end);
+
+---------------------------------------------------------------
+7. HÉRITER DE STD::STACK ET EXPOSER LES ITÉRATEURS (ex02)
+---------------------------------------------------------------
+
+std::stack n'expose pas d'itérateurs, mais son conteneur interne
+(std::deque par défaut) en a.
+
+std::stack a un membre PROTÉGÉ "c" qui est le conteneur interne.
+Une classe dérivée y accède avec "this->c" :
+
+    template <typename T>
+    class MutantStack : public std::stack<T>
+    {
+    public:
+        typedef typename std::stack<T>::container_type::iterator iterator;
+
+        iterator begin() { return this->c.begin(); }
+        iterator end()   { return this->c.end(); }
+    };
+
+container_type est le typedef du type de conteneur interne (deque<T>).
+
+Pourquoi "typename" devant std::stack<T>::container_type::iterator ?
+-> C'est un type dépendant d'un paramètre template. Sans "typename",
+   le compilateur croit que c'est une valeur, pas un type.
+
+---------------------------------------------------------------
+8. REGLES SUR LES TYPES DÉPENDANTS (typename)
+---------------------------------------------------------------
+
+Dans un template, tout type qui dépend de T doit être précédé de "typename" :
+
+    typename T::iterator          // type dépendant
+    typename T::value_type        // type dépendant
+    typename std::stack<T>::container_type::iterator  // type dépendant
+
+Sans "typename" -> erreur de compilation.
+
+---------------------------------------------------------------
+9. SPAN : SHORTEST ET LONGEST SPAN
+---------------------------------------------------------------
+
+shortestSpan : plus petit écart entre deux nombres quelconques.
+  Algorithme : trier, puis chercher le min des différences consécutives.
+  Complexité : O(n log n) pour le tri.
+
+longestSpan : plus grand écart = max - min.
+  Algorithme : std::max_element - std::min_element.
+  Complexité : O(n).
+
+Exemple :
+    {6, 3, 17, 9, 11} -> trié : {3, 6, 9, 11, 17}
+    différences : 3, 3, 2, 6 -> shortestSpan = 2
+    longestSpan = 17 - 3 = 14
+
+---------------------------------------------------------------
+RÉSUMÉ RAPIDE
+---------------------------------------------------------------
+
+    ex00 : easyfind  -> template + std::find sur n'importe quel conteneur
+    ex01 : Span      -> vector + std::sort/min_element/max_element + insert range
+    ex02 : MutantStack -> héritage std::stack + exposer this->c + typename
+
+    Règle d'or du module : utiliser les conteneurs et algorithmes STL
+    partout où c'est possible. Ne pas réinventer la roue.
+
+===============================================================
