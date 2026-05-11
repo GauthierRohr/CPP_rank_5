@@ -9,7 +9,7 @@ PresidentialPardonForm::PresidentialPardonForm() :
 	std::cout << "PresidentialPardonForm default constructor called" << std::endl;
 }
 
-// Constructeur param : sign=25, exec=5
+// Construc param : sign=25, exec=5
 PresidentialPardonForm::PresidentialPardonForm(std::string const & target) :
 	AForm("PresidentialPardonForm", 25, 5),
 	_target(target)
@@ -25,7 +25,7 @@ PresidentialPardonForm::PresidentialPardonForm(PresidentialPardonForm const & ot
 	std::cout << "PresidentialPardonForm copy constructor called" << std::endl;
 }
 
-// Affectation
+// Affect
 PresidentialPardonForm &	PresidentialPardonForm::operator=(PresidentialPardonForm const & other)
 {
 	std::cout << "PresidentialPardonForm copy operator called" << std::endl;

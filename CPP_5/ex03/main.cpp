@@ -1,15 +1,18 @@
 #include "Bureaucrat.hpp"
 #include "AForm.hpp"
 #include "Intern.hpp"
+#include <cstdlib>
+#include <ctime>
 
 int	main()
 {
+	std::srand(std::time(NULL));
 	std::cout << "=> Test 1: Intern creates RobotomyRequestForm <=" << std::endl;
 	{
 		Intern	someRandomIntern;
 		AForm*	robotomyForm;
 
-		robotomyForm = someRandomIntern.makeForm("robotomy request", "Bender");
+		robotomyForm = someRandomIntern.makeForm("robotomy request", "Grosthier");
 		if (robotomyForm != NULL)
 		{
 			std::cout << *robotomyForm << std::endl;
@@ -27,7 +30,7 @@ int	main()
 		Intern	someRandomIntern;
 		AForm*	shrubForm;
 
-		shrubForm = someRandomIntern.makeForm("shrubbery creation", "garden");
+		shrubForm = someRandomIntern.makeForm("shrubbery creation", "HOUSEEEE");
 		if (shrubForm != NULL)
 		{
 			Bureaucrat gardener("Gardener", 136);
@@ -43,7 +46,7 @@ int	main()
 		Intern	someRandomIntern;
 		AForm*	pardonForm;
 
-		pardonForm = someRandomIntern.makeForm("presidential pardon", "Arthur Dent");
+		pardonForm = someRandomIntern.makeForm("presidential pardon", "Grosthier");
 		if (pardonForm != NULL)
 		{
 			Bureaucrat president("President", 1);

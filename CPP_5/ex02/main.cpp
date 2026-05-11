@@ -3,14 +3,17 @@
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
+#include <cstdlib>
+#include <ctime>
 
 int	main()
 {
+	std::srand(std::time(NULL));
 	std::cout << "=> Test 1: ShrubberyCreationForm <=" << std::endl;
 	try
 	{
-		Bureaucrat gardener("Gardener", 136);
-		ShrubberyCreationForm shrubForm("home");
+		Bureaucrat gardener("Pilou", 136);
+		ShrubberyCreationForm shrubForm("ShrubForm");
 
 		std::cout << gardener << std::endl;
 		std::cout << shrubForm << std::endl;
@@ -28,10 +31,14 @@ int	main()
 	std::cout << "=> Test 2: RobotomyRequestForm <=" << std::endl;
 	try
 	{
-		Bureaucrat robotomist("Robotomist", 45);
-		RobotomyRequestForm robotForm("Bender");
+		Bureaucrat robotomist("Charlie", 45);
+		RobotomyRequestForm robotForm("RobotForm");
 
 		robotomist.signForm(robotForm);
+		robotomist.executeForm(robotForm);
+		robotomist.executeForm(robotForm);
+		robotomist.executeForm(robotForm);
+		robotomist.executeForm(robotForm);
 		robotomist.executeForm(robotForm);
 		robotomist.executeForm(robotForm);
 		robotomist.executeForm(robotForm);
@@ -46,7 +53,7 @@ int	main()
 	try
 	{
 		Bureaucrat president("President", 1);
-		PresidentialPardonForm pardonForm("Arthur Dent");
+		PresidentialPardonForm pardonForm("PardonForm");
 
 		president.signForm(pardonForm);
 		president.executeForm(pardonForm);
