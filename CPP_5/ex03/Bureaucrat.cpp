@@ -3,12 +3,12 @@
 
 const char*	Bureaucrat::GradeTooHighException::what() const throw()
 {
-	return ("Grade is too high (minimum is 1)");
+	return ("Grade is too high (maximum is 1)");
 }
 
 const char*	Bureaucrat::GradeTooLowException::what() const throw()
 {
-	return ("Grade is too low (maximum is 150)");
+	return ("Grade is too low (minimum is 150)");
 }
 
 // Constr
@@ -91,7 +91,8 @@ void	Bureaucrat::signForm(AForm & form)
 	catch (std::exception & e)
 	{
 		std::cout << _name << " couldn't sign " << form.getName()
-				  << " because " << e.what() << std::endl;
+				  << " because his grade (" << _grade << ") is lower than Form grade ("
+				  << form.getGradeToSign() << ")" << std::endl;
 	}
 }
 
@@ -100,8 +101,15 @@ void	Bureaucrat::executeForm(AForm const & form)
 {
 	try
 	{
-		form.execute(*this);
+		form.checkExecutionRequirements(*this);
 		std::cout << _name << " executed " << form.getName() << std::endl;
+		form.execute(*this);
+	}
+	catch (AForm::GradeTooLowException &)
+	{
+		std::cerr << _name << " couldn't execute " << form.getName()
+				  << " because his grade (" << _grade << ") is lower than Form grade ("
+				  << form.getGradeToExecute() << ")" << std::endl;
 	}
 	catch (std::exception & e)
 	{
