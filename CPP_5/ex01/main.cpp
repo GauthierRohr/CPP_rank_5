@@ -3,15 +3,15 @@
 
 int	main()
 {
-	std::cout << "=> Test 1: Successful signing <=" << std::endl;
+	std::cout << "=> Test 1: ok sign <=" << std::endl;
 	try
 	{
-		Bureaucrat alice("Alice", 30);
-		Form taxForm("TaxForm", 50, 25);
-		std::cout << alice << std::endl;
-		std::cout << taxForm << std::endl;
-		alice.signForm(taxForm);
-		std::cout << taxForm << std::endl;
+		Bureaucrat jeandenis("Jean-Denis Soukoudefouait", 30);
+		Form interneSoumisEtEfficace("Contrat de travail Sous Soumission intense", 50, 25);
+		std::cout << jeandenis << std::endl;
+		std::cout << interneSoumisEtEfficace << std::endl;
+		jeandenis.signForm(interneSoumisEtEfficace);
+		std::cout << interneSoumisEtEfficace << std::endl;
 	}
 	catch (std::exception & e)
 	{
@@ -19,10 +19,10 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test 2: Grade too low to sign <=" << std::endl;
+	std::cout << "=> Test 2: too low to sign <=" << std::endl;
 	try
 	{
-		Bureaucrat bob("Bob", 100);
+		Bureaucrat bob("noob", 100);
 		Form presidentForm("PresidentForm", 5, 1);
 		std::cout << bob << std::endl;
 		std::cout << presidentForm << std::endl;
@@ -34,7 +34,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test 3: Form with invalid grade <=" << std::endl;
+	std::cout << "=> Test 3: invalid grade form <=" << std::endl;
 	try
 	{
 		Form invalidForm("Invalid", 0, 50);

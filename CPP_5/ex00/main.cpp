@@ -24,7 +24,7 @@ int	main()
 	std::cout << "=> Test 2: Grade too high (0) <=" << std::endl;
 	try
 	{
-		Bureaucrat toohigh("toohigh", 0);
+		Bureaucrat toohigh("Too High", 0);
 		// Not printedd normally
 		std::cout << toohigh << std::endl;
 	}
@@ -37,8 +37,8 @@ int	main()
 	std::cout << "=> Test 3: Grade too low (151) <=" << std::endl;
 	try
 	{
-		Bureaucrat toohigh("Too High", 151);
-		std::cout << toohigh << std::endl;
+		Bureaucrat toolow("Too Low", 151);
+		std::cout << toolow << std::endl;
 	}
 	catch (std::exception & e)
 	{
@@ -62,9 +62,9 @@ int	main()
 	std::cout << "=> Test 5: Decr more than 150 <=" << std::endl;
 	try
 	{
-		Bureaucrat lackey("Lackey", 150);
-		std::cout << lackey << std::endl;
-		lackey.decrementGrade();
+		Bureaucrat noob("Noob", 150);
+		std::cout << noob << std::endl;
+		noob.decrementGrade();
 	}
 	catch (std::exception & e)
 	{
