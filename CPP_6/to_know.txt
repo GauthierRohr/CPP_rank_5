@@ -1,0 +1,119 @@
+================================================================================
+CPP_6 — Questions de correction et réponses
+================================================================================
+
+EX00 — CONVERSION DE TYPES SCALAIRES (static_cast)
+────────────────────────────────────────────────────
+
+Q : La classe a-t-elle un constructeur privé et des méthodes statiques uniquement ?
+R : Oui. ScalarConverter ne peut pas être instanciée :
+    - Constructeur par défaut, copie, =, et destructeur sont privés.
+    - convert() est la seule méthode, et elle est static.
+    Cela en fait une classe utilitaire pure — on ne l'utilise que via
+    ScalarConverter::convert("42"), jamais en créant un objet.
+
+Q : Qu'est-ce qu'un static_cast ? Pourquoi l'utiliser ici ?
+R : static_cast<T>(val) est une conversion explicite vérifiée à la compilation.
+    Il est plus sûr que les casts C (int)val car :
+    - Interdit les conversions illégales (ex: pointeur → int sans reinterpret)
+    - Lisible : le programmeur indique clairement son intention
+    Dans cet exercice : static_cast<char>(double_value), static_cast<int>(double_value),
+    etc. Le compilateur vérifie que la conversion est possible.
+
+Q : La différence entre les 4 casts C++ ?
+R :
+    static_cast      → conversion de type vérifiée à la compilation (upcast/downcast numérique)
+    reinterpret_cast → réinterprète les bits bruts (pointeur ↔ entier, ex02 de CPP_6)
+    dynamic_cast     → downcast polymorphique vérifié à l'exécution (nécessite RTTI)
+    const_cast       → ajouter/retirer const sur un pointeur/référence
+
+Q : Qu'est-ce qu'un "pseudo-littéral" ? (nan, +inf, -inf, nanf, +inff, -inff)
+R : Valeurs flottantes spéciales définies par la norme IEEE 754 :
+    - NaN (Not a Number) : résultat d'opération invalide (0/0, sqrt(-1))
+    - Inf : débordement ou division par zéro d'un flottant
+    Ces valeurs n'ont pas de représentation entière ni char → "impossible" pour char et int.
+
+Q : Pourquoi utilise-t-on quiet_NaN() plutôt que signaling_NaN() ?
+R : IEEE 754 définit deux NaN :
+    - quiet NaN   : propagé silencieusement dans les calculs
+    - signaling NaN : déclenche une exception CPU à la première utilisation
+    On veut juste représenter une valeur invalide → quiet_NaN() évite tout crash.
+
+Q : Qu'affiche le programme pour char: quand la valeur est 0 ?
+R : "Non displayable". La valeur 0 est dans [0, 127] donc c'est un char valide,
+    mais std::isprint(0) == 0 (non affichable). On distingue :
+    - "impossible"       : hors de [0, 127] ou NaN/Inf
+    - "Non displayable" : dans [0, 127] mais non imprimable (ASCII 0-31, 127)
+    - "'X'"             : imprimable
+
+────────────────────────────────────────────────────
+EX01 — SÉRIALISATION (reinterpret_cast)
+────────────────────────────────────────────────────
+
+Q : La classe a-t-elle un constructeur privé et des méthodes statiques ?
+R : Oui. Même principe que ScalarConverter — classe utilitaire non instanciable.
+    Deux méthodes statiques uniquement : serialize() et deserialize().
+
+Q : Qu'est-ce que reinterpret_cast ? Quand l'utiliser ?
+R : reinterpret_cast<T>(val) réinterprète la représentation binaire brute sans
+    aucune conversion. Il dit au compilateur : "traite ces bits comme un T".
+    À utiliser seulement pour :
+    - Convertir un pointeur en entier (serialize)
+    - Convertir un entier en pointeur (deserialize)
+    - Interfacer avec du code C bas niveau
+    JAMAIS pour des conversions numériques (utiliser static_cast).
+
+Q : Qu'est-ce que uintptr_t ?
+R : Un type entier non signé garanti assez large pour contenir un pointeur.
+    Défini dans <stdint.h> / <cstdint>.
+    uintptr_t est typiquement 32 bits sur x86 et 64 bits sur x86_64.
+    Il est indispensable pour "stocker" un pointeur sous forme d'entier.
+
+Q : Pourquoi le test vérifie-t-il que restored_pointer == &original_data ?
+R : C'est la preuve que serialize → deserialize est un aller-retour parfait :
+    le même octet mémoire est retrouvé. Si les pointeurs différaient, la
+    désérialisation aurait produit un pointeur vers une autre adresse → crash
+    ou comportement indéfini dès qu'on y accède.
+
+────────────────────────────────────────────────────
+EX02 — IDENTIFICATION DE TYPE RÉEL (dynamic_cast)
+────────────────────────────────────────────────────
+
+Q : Pourquoi Base a-t-elle un destructeur virtuel ?
+R : Pour activer le RTTI (Run-Time Type Information), nécessaire au dynamic_cast.
+    Sans destructeur virtuel, Base n'est pas polymorphique → dynamic_cast
+    refuserait de compiler ou ne fonctionnerait pas correctement.
+    Bonus : avec un destructeur virtuel, `delete base_ptr` appelle bien le
+    destructeur de la classe dérivée → pas de fuite mémoire.
+
+Q : Comment fonctionne dynamic_cast<T*>(p) sur un pointeur ?
+R : Tente de downcast p vers T*.
+    - Si l'objet pointé est bien un T (ou un sous-type de T) → retourne T*
+    - Sinon → retourne NULL
+    On DOIT vérifier NULL avant d'utiliser le résultat.
+
+Q : Comment fonctionne dynamic_cast<T&>(r) sur une référence ?
+R : Tente de downcast r vers T&.
+    - Si l'objet référencé est bien un T → retourne T&
+    - Sinon → LÈVE std::bad_cast (pas de retour NULL possible sur une référence)
+    On DOIT utiliser try/catch pour détecter l'échec.
+
+Q : Pourquoi ne faut-il pas utiliser <typeinfo> ?
+R : Le sujet l'interdit explicitement. L'exercice enseigne à identifier le type
+    par tentatives de cast successives, pas par comparaison de typeid().
+    typeid() retourne un std::type_info qui permet des comparaisons directes
+    comme typeid(*p) == typeid(A) — c'est une solution triviale mais interdite.
+
+Q : Pourquoi les classes A, B, C n'ont-elles pas de constructeur/destructeur propres ?
+R : Le sujet ne le demande pas. La forme canonique orthogonale est requise pour
+    les classes non-interface (qui ont des attributs). Ici A, B, C sont vides,
+    elles héritent du destructeur virtuel de Base. Le compilateur génère les
+    constructeurs/destructeurs par défaut automatiquement.
+
+Q : Qu'est-ce que le RTTI ?
+R : Run-Time Type Information — mécanisme C++ qui permet de connaître le type
+    réel d'un objet à l'exécution. Activé automatiquement quand une classe a
+    au moins une méthode virtuelle.
+    dynamic_cast et typeid() utilisent le RTTI.
+    Sur certaines plateformes, le RTTI peut être désactivé (-fno-rtti) pour
+    réduire la taille du binaire — dynamic_cast ne fonctionne alors plus.

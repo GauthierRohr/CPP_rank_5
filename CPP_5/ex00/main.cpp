@@ -47,28 +47,32 @@ int	main()
 
 	std::cout << std::endl;
 	std::cout << "=> Test 4: Inc more than 1 <=" << std::endl;
-	try
 	{
 		Bureaucrat gigaBoss("Giga Boss", 1);
 		std::cout << gigaBoss << std::endl;
-		gigaBoss.incrementGrade();
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << "Exception catch : " << e.what() << std::endl;
+		try
+		{
+			gigaBoss.incrementGrade();
+		}
+		catch (std::exception & e)
+		{
+			std::cerr << "Exception catch : " << e.what() << std::endl;
+		}
 	}
 
 	std::cout << std::endl;
 	std::cout << "=> Test 5: Decr more than 150 <=" << std::endl;
-	try
 	{
 		Bureaucrat noob("Noob", 150);
 		std::cout << noob << std::endl;
-		noob.decrementGrade();
-	}
-	catch (std::exception & e)
-	{
-		std::cerr << "Exception catch : " << e.what() << std::endl;
+		try
+		{
+			noob.decrementGrade();
+		}
+		catch (std::exception & e)
+		{
+			std::cerr << "Exception catch : " << e.what() << std::endl;
+		}
 	}
 
 	return (0);

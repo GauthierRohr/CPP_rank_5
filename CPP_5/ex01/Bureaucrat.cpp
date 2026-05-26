@@ -3,12 +3,12 @@
 
 const char*	Bureaucrat::GradeTooHighException::what() const throw()
 {
-	return ("Grade is too high (minimum is 1)");
+	return ("Grade is too high (maximum is 1)");
 }
 
 const char*	Bureaucrat::GradeTooLowException::what() const throw()
 {
-	return ("Grade is too low (maximum is 150)");
+	return ("Grade is too low (minimum is 150)");
 }
 
 // Constr
@@ -91,7 +91,8 @@ void	Bureaucrat::signForm(Form & form)
 	catch (std::exception & e)
 	{
 		std::cout << _name << " couldn't sign " << form.getName()
-				  << " because " << e.what() << std::endl;
+				  << " because his grade (" << _grade << ") is lower than Form grade ("
+				  << form.getGradeToSign() << ")" << std::endl;
 	}
 }
 

@@ -22,11 +22,11 @@ int	main()
 	std::cout << "=> Test 2: too low to sign <=" << std::endl;
 	try
 	{
-		Bureaucrat bob("noob", 100);
+		Bureaucrat noob("Noob", 100);
 		Form presidentForm("PresidentForm", 5, 1);
-		std::cout << bob << std::endl;
+		std::cout << noob << std::endl;
 		std::cout << presidentForm << std::endl;
-		bob.signForm(presidentForm);
+		noob.signForm(presidentForm);
 	}
 	catch (std::exception & e)
 	{
@@ -37,7 +37,23 @@ int	main()
 	std::cout << "=> Test 3: invalid grade form <=" << std::endl;
 	try
 	{
-		Form invalidForm("Invalid", 0, 50);
+		Form invalidForm("Invalid : grade 0", 0, 50);
+	}
+	catch (std::exception & e)
+	{
+		std::cerr << "Exception catch : " << e.what() << std::endl;
+	}
+	try
+	{
+		Form invalidFormTwo("Invalid : grade 151", 151, 50);
+	}
+	catch (std::exception & e)
+	{
+		std::cerr << "Exception catch : " << e.what() << std::endl;
+	}
+	try
+	{
+		Form invalidFormTwo("Invalid : grade -12", -12, 50);
 	}
 	catch (std::exception & e)
 	{

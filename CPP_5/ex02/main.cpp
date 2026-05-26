@@ -12,8 +12,8 @@ int	main()
 	std::cout << "=> Test 1: ShrubberyCreationForm <=" << std::endl;
 	try
 	{
-		Bureaucrat gardener("Pilou", 136);
-		ShrubberyCreationForm shrubForm("ShrubForm");
+		Bureaucrat gardener("Pilou", 137);
+		ShrubberyCreationForm shrubForm("ShrubForm Tester");
 
 		std::cout << gardener << std::endl;
 		std::cout << shrubForm << std::endl;
@@ -32,13 +32,12 @@ int	main()
 	try
 	{
 		Bureaucrat robotomist("Charlie", 45);
-		RobotomyRequestForm robotForm("RobotForm");
+		RobotomyRequestForm robotForm("RobotForm Tester");
 
+		std::cout << robotomist << std::endl;
+		std::cout << robotForm << std::endl;
 		robotomist.signForm(robotForm);
-		robotomist.executeForm(robotForm);
-		robotomist.executeForm(robotForm);
-		robotomist.executeForm(robotForm);
-		robotomist.executeForm(robotForm);
+
 		robotomist.executeForm(robotForm);
 		robotomist.executeForm(robotForm);
 		robotomist.executeForm(robotForm);
@@ -53,7 +52,10 @@ int	main()
 	try
 	{
 		Bureaucrat president("President", 1);
-		PresidentialPardonForm pardonForm("PardonForm");
+		PresidentialPardonForm pardonForm("PardonForm Tester");
+
+		std::cout << president << std::endl;
+		std::cout << pardonForm << std::endl;
 
 		president.signForm(pardonForm);
 		president.executeForm(pardonForm);
@@ -84,6 +86,10 @@ int	main()
 		Bureaucrat lowGrade("LowGrade", 100);
 		Bureaucrat signer("Signer", 1);
 		PresidentialPardonForm pardonForm("Target");
+
+		std::cout << lowGrade << std::endl;
+		std::cout << signer << std::endl;
+		std::cout << pardonForm << std::endl;
 
 		signer.signForm(pardonForm);
 		lowGrade.executeForm(pardonForm);

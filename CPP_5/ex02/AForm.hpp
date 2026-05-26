@@ -43,10 +43,9 @@ public:
 
 	// Execute (pure virtual)
 	virtual void	execute(Bureaucrat const & executor) const = 0;
+	void	checkExecutionRequirements(Bureaucrat const & executor) const;
 
 protected:
-	// Check exec requirements
-	void	checkExecutionRequirements(Bureaucrat const & executor) const;
 
 private:
 	std::string const	_name;

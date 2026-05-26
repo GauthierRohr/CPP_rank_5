@@ -3,12 +3,12 @@
 
 const char*	Form::GradeTooHighException::what() const throw()
 {
-	return ("Form grade is too high (minimum is 1)");
+	return ("Form grade is too high (maximum is 1)");
 }
 
 const char*	Form::GradeTooLowException::what() const throw()
 {
-	return ("Form grade is too low (maximum is 150)");
+	return ("Form grade is too low (minimum is 150)");
 }
 
 // Constr
