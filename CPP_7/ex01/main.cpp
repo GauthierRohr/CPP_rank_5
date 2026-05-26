@@ -2,20 +2,17 @@
 #include <string>
 #include "iter.hpp"
 
-// Affiche un élément (version const)
 template <typename T>
 void	printElement(T const & element)
 {
 	std::cout << element << std::endl;
 }
 
-// Multiplie un entier par 2
 void	doubleInt(int & n)
 {
 	n *= 2;
 }
 
-// Affiche la longueur d'une string
 void	printLength(std::string const & s)
 {
 	std::cout << s << " (len=" << s.length() << ")" << std::endl;

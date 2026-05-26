@@ -4,15 +4,14 @@
 # include <stdint.h>
 # include "Data.hpp"
 
-// Classe utilitaire de sérialisation/désérialisation de pointeur.
-// Non instanciable : constructeur et opérateur d'affectation privés.
+// Non-instantiable utility class for pointer serialization
 class Serializer
 {
 public:
-	// Convertit un pointeur Data* en entier non signé (sérialisation).
+	// Data* -> uintptr_t
 	static uintptr_t	serialize(Data* pointer);
 
-	// Convertit un entier non signé en pointeur Data* (désérialisation).
+	// uintptr_t -> Data*
 	static Data*		deserialize(uintptr_t raw);
 
 private:

@@ -45,7 +45,7 @@ AForm*	Intern::createPresidential(std::string const & target)
 	return (new PresidentialPardonForm(target));
 }
 
-// Map name → factory, avoid if/else chain
+// Map name -> factory, avoid if/else chain
 struct FormEntry
 {
 	std::string	name;

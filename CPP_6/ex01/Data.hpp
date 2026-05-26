@@ -3,8 +3,7 @@
 
 # include <string>
 
-// Structure de données utilisée pour tester la sérialisation.
-// Contient plusieurs membres pour prouver que la structure n'est pas vide.
+// Test data struct for serialization
 struct Data
 {
 	int			identifier;

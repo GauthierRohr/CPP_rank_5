@@ -1,5 +1,6 @@
 #include "RobotomyRequestForm.hpp"
 #include "Bureaucrat.hpp"
+#include <cstdlib>
 
 // Constr
 RobotomyRequestForm::RobotomyRequestForm() :

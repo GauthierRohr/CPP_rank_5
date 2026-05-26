@@ -10,20 +10,17 @@ const char*	Span::NoSpanException::what() const throw()
 	return ("Not enough numbers to compute a span (need at least 2)");
 }
 
-// Constructeur : définit la capacité max
 Span::Span(unsigned int n) :
 	_max(n)
 {
 }
 
-// Copie
 Span::Span(Span const & other) :
 	_max(other._max),
 	_numbers(other._numbers)
 {
 }
 
-// Affectation
 Span &	Span::operator=(Span const & other)
 {
 	if (this != &other)
@@ -34,12 +31,10 @@ Span &	Span::operator=(Span const & other)
 	return (*this);
 }
 
-// Destructeur
 Span::~Span()
 {
 }
 
-// Ajoute un nombre, throw si capacité atteinte
 void	Span::addNumber(int number)
 {
 	if (_numbers.size() >= (size_t)_max)
@@ -47,7 +42,7 @@ void	Span::addNumber(int number)
 	_numbers.push_back(number);
 }
 
-// Trie une copie et cherche le plus petit écart entre deux consécutifs
+// Sort a copy, scan consecutive pairs for min gap
 int	Span::shortestSpan() const
 {
 	if (_numbers.size() < 2)
@@ -66,7 +61,6 @@ int	Span::shortestSpan() const
 	return (shortest);
 }
 
-// Plus grand écart = max - min
 int	Span::longestSpan() const
 {
 	if (_numbers.size() < 2)

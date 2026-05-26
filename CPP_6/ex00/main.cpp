@@ -1,15 +1,13 @@
 #include "ScalarConverter.hpp"
 #include <iostream>
 
-// Point d'entrée du programme.
-// Prend exactement un argument (le littéral à convertir).
+// Expects exactly one arg (the literal to convert)
 int	main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
 		std::cerr << "Usage: ./convert <littéral>" << std::endl;
 		return (1);
-		// erreur : nombre d'arguments invalide
 	}
 
 	std::cout << "=> Test : " << argv[1] << " <=" << std::endl;
@@ -17,7 +15,7 @@ int	main(int argc, char** argv)
 
 	std::cout << std::endl;
 
-	std::cout << "=> Tests supplémentaires <=" << std::endl;
+	std::cout << "=> Tests autres <=" << std::endl;
 
 	std::cout << std::endl;
 	std::cout << "-- char 'a' --" << std::endl;
@@ -56,5 +54,4 @@ int	main(int argc, char** argv)
 	ScalarConverter::convert("-inf");
 
 	return (0);
-	// fin normale du programme
 }

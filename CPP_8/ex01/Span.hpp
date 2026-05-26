@@ -8,7 +8,6 @@
 class Span
 {
 public:
-	// Exceptions
 	class SpanFullException : public std::exception
 	{
 	public:
@@ -26,10 +25,10 @@ public:
 	Span &	operator=(Span const & other);
 	~Span();
 
-	// Ajoute un nombre, throw si plein
+	// Add number; throw if full
 	void	addNumber(int number);
 
-	// Ajoute une plage d'itérateurs en une seule fois
+	// Bulk-insert from iterator range
 	template <typename Iterator>
 	void	addRange(Iterator begin, Iterator end)
 	{
@@ -40,10 +39,10 @@ public:
 		_numbers.insert(_numbers.end(), begin, end);
 	}
 
-	// Plus petit écart entre deux nombres
+	// Smallest gap between any two numbers
 	int	shortestSpan() const;
 
-	// Plus grand écart entre deux nombres
+	// Largest gap (max - min)
 	int	longestSpan() const;
 
 private:

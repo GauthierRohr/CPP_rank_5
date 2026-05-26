@@ -1,8 +1,7 @@
 #ifndef BASE_HPP
 # define BASE_HPP
 
-// Classe de base polymorphique avec destructeur virtuel.
-// Le destructeur virtuel active le RTTI, nécessaire pour dynamic_cast.
+// Polymorphic base; virtual dtor enables RTTI for dynamic_cast
 class Base
 {
 public:

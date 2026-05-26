@@ -1,19 +1,17 @@
 #ifndef ARRAY_TPP
 # define ARRAY_TPP
 
-// Constructeur par défaut : tableau vide
 template <typename T>
 Array<T>::Array() : _data(NULL), _size(0)
 {
 }
 
-// Constructeur avec n : n éléments initialisés par défaut
 template <typename T>
 Array<T>::Array(unsigned int n) : _data(new T[n]()), _size(n)
 {
 }
 
-// Constructeur par copie : copie profonde
+// Deep copy
 template <typename T>
 Array<T>::Array(Array const & other) : _data(new T[other._size]()), _size(other._size)
 {
@@ -21,7 +19,7 @@ Array<T>::Array(Array const & other) : _data(new T[other._size]()), _size(other.
 		_data[i] = other._data[i];
 }
 
-// Opérateur d'affectation : copie profonde, libère l'ancienne mémoire
+// Deep copy, free old memory
 template <typename T>
 Array<T> &	Array<T>::operator=(Array const & other)
 {
@@ -36,14 +34,13 @@ Array<T> &	Array<T>::operator=(Array const & other)
 	return (*this);
 }
 
-// Destructeur : libère le tableau
 template <typename T>
 Array<T>::~Array()
 {
 	delete[] _data;
 }
 
-// Accès par index, throw si hors limites
+// Throw if out of bounds
 template <typename T>
 T &	Array<T>::operator[](unsigned int index)
 {
@@ -52,7 +49,6 @@ T &	Array<T>::operator[](unsigned int index)
 	return (_data[index]);
 }
 
-// Accès const par index, throw si hors limites
 template <typename T>
 T const &	Array<T>::operator[](unsigned int index) const
 {
@@ -61,7 +57,6 @@ T const &	Array<T>::operator[](unsigned int index) const
 	return (_data[index]);
 }
 
-// Retourne le nombre d'éléments
 template <typename T>
 unsigned int	Array<T>::size() const
 {

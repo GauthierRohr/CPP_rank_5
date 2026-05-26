@@ -13,7 +13,7 @@ public:
 	RobotomyRequestForm &	operator=(RobotomyRequestForm const & other);
 	~RobotomyRequestForm();
 
-	// Robotomize target (50% success)
+	// Robotomize 50% success
 	virtual void	execute(Bureaucrat const & executor) const;
 
 private:

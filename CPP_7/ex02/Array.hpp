@@ -13,11 +13,11 @@ public:
 	Array &		operator=(Array const & other);
 	~Array();
 
-	// Accès par index (non-const et const)
+	// Indexed access (const and non-const)
 	T &				operator[](unsigned int index);
 	T const &		operator[](unsigned int index) const;
 
-	// Nombre d'éléments
+	// Element count
 	unsigned int	size() const;
 
 private:

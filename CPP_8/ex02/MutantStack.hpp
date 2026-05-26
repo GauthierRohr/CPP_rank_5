@@ -3,8 +3,7 @@
 
 # include <stack>
 
-// MutantStack : std::stack avec itérateurs exposés
-// Utilise le membre protégé 'c' (le conteneur interne de std::stack)
+// std::stack with exposed iterators via protected member 'c'
 template <typename T>
 class MutantStack : public std::stack<T>
 {

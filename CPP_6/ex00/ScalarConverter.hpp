@@ -3,12 +3,11 @@
 
 # include <string>
 
-// Classe utilitaire de conversion de littéraux scalaires C++.
-// Non instanciable : constructeur et opérateur d'affectation privés.
+// Non-instantiable utility class for scalar literal conversion
 class ScalarConverter
 {
 public:
-	// Convertit un littéral C++ et affiche sa valeur en char, int, float, double.
+	// Convert literal and print char/int/float/double
 	static void	convert(std::string const & literal);
 
 private:

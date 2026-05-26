@@ -3,8 +3,7 @@
 
 # include <cstddef>
 
-// Applique une fonction à chaque élément du tableau
-// T peut être const ou non-const selon le contexte
+// Apply func to each element; T can be const or non-const
 template <typename T, typename F>
 void	iter(T * array, size_t const len, F func)
 {

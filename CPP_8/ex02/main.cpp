@@ -27,7 +27,6 @@ int	main()
 		++it;
 	}
 	std::stack<int>	s(mstack);
-	// s contient les mêmes éléments que mstack
 
 	std::cout << std::endl;
 	std::cout << "=> Même test avec std::list (comparaison) <=" << std::endl;
