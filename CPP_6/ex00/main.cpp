@@ -1,12 +1,11 @@
 #include "ScalarConverter.hpp"
 #include <iostream>
 
-// Expects exactly one arg (the literal to convert)
 int	main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
-		std::cerr << "Usage: ./convert <littéral>" << std::endl;
+		std::cerr << "Usage: ./convert <litteral>" << std::endl;
 		return (1);
 	}
 
@@ -15,7 +14,7 @@ int	main(int argc, char** argv)
 
 	std::cout << std::endl;
 
-	std::cout << "=> Tests autres <=" << std::endl;
+	std::cout << "=> Other tests <=" << std::endl;
 
 	std::cout << std::endl;
 	std::cout << "-- char 'a' --" << std::endl;
@@ -46,8 +45,20 @@ int	main(int argc, char** argv)
 	ScalarConverter::convert("nan");
 
 	std::cout << std::endl;
+	std::cout << "-- nanf --" << std::endl;
+	ScalarConverter::convert("nanf");
+
+	std::cout << std::endl;
 	std::cout << "-- +inff --" << std::endl;
 	ScalarConverter::convert("+inff");
+
+	std::cout << std::endl;
+	std::cout << "-- -inff --" << std::endl;
+	ScalarConverter::convert("-inff");
+
+	std::cout << std::endl;
+	std::cout << "-- +inf --" << std::endl;
+	ScalarConverter::convert("+inf");
 
 	std::cout << std::endl;
 	std::cout << "-- -inf --" << std::endl;
