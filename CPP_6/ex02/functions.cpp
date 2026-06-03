@@ -1,18 +1,19 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include "functions.hpp"
-#include "A.hpp"
-#include "B.hpp"
-#include "C.hpp"
 
 Base*	generate(void)
 {
 	int random_choice = std::rand() % 3;
 	if (random_choice == 0)
+	{
+		std::cout << "gambling is: A" << std::endl;
 		return (new A());
+	}
 	if (random_choice == 1)
+	{
+		std::cout << "gambling is: B" << std::endl;
 		return (new B());
+	}
+	std::cout << "gambling is: C" << std::endl;
 	return (new C());
 }
 

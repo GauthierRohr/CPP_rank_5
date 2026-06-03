@@ -3,7 +3,6 @@
 
 # include <string>
 
-// Test data struct for serialization
 struct Data
 {
 	int			identifier;

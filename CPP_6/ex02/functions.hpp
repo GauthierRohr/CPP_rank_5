@@ -1,15 +1,24 @@
 #ifndef FUNCTIONS_HPP
 # define FUNCTIONS_HPP
 
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 # include "Base.hpp"
+# include "A.hpp"
+# include "B.hpp"
+# include "C.hpp"
 
-// Randomly allocate A, B or C; return Base*
+// Alloue A, B ou C
+// retourne Base*
 Base*	generate(void);
 
-// Identify real type via pointer dynamic_cast; print A/B/C
+// Identifie type avec pointeuur dynamic_cast;
+// print A, B ou C
 void	identify(Base* pointer);
 
-// Identify real type via reference dynamic_cast (throws on fail; no pointer allowed)
+// Identifie type avec reference dynamic_cast
+// throw si erreur
 void	identify(Base& reference);
 
 #endif

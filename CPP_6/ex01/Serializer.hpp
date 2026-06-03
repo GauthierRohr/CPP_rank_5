@@ -4,7 +4,7 @@
 # include <stdint.h>
 # include "Data.hpp"
 
-// Non-instantiable utility class for pointer serialization
+// NOn instatiable
 class Serializer
 {
 public:

@@ -3,7 +3,6 @@
 #include <ctime>
 #include "functions.hpp"
 
-// Generate random object, identify via pointer then reference, then free
 static void	run_one_test(int test_number)
 {
 	std::cout << "=> Test " << test_number << " <=" << std::endl;
@@ -13,8 +12,9 @@ static void	run_one_test(int test_number)
 	std::cout << "identify(pointeur) : ";
 	identify(generated_object);
 
-	std::cout << "identify(référence) : ";
+	std::cout << "identify(reference) : ";
 	identify(*generated_object);
+	std::cout << std::endl;
 
 	delete generated_object;
 }
@@ -23,7 +23,7 @@ int	main()
 {
 	std::srand(static_cast<unsigned int>(std::time(NULL)));
 
-	int total_tests = 10;
+	int total_tests = 6;
 	for (int index = 1; index <= total_tests; index++)
 		run_one_test(index);
 
