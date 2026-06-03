@@ -210,7 +210,9 @@ static void	convert_char(std::string const & literal)
 
 static void	convert_int(std::string const & literal)
 {
-	double double_value = static_cast<double>(std::atoi(literal.c_str()));
+	int int_value;
+	std::istringstream(literal) >> int_value;
+	double double_value = static_cast<double>(int_value);
 	print_char(double_value);
 	print_int(double_value);
 	print_float_and_double(double_value);
@@ -218,7 +220,8 @@ static void	convert_int(std::string const & literal)
 
 static void	convert_float(std::string const & literal)
 {
-	double double_value = static_cast<double>(std::atof(literal.c_str()));
+	double double_value;
+	std::istringstream(literal) >> double_value;
 	print_char(double_value);
 	print_int(double_value);
 	print_float_and_double(double_value);
@@ -226,7 +229,8 @@ static void	convert_float(std::string const & literal)
 
 static void	convert_double(std::string const & literal)
 {
-	double double_value = std::atof(literal.c_str());
+	double double_value;
+	std::istringstream(literal) >> double_value;
 	print_char(double_value);
 	print_int(double_value);
 	print_float_and_double(double_value);
