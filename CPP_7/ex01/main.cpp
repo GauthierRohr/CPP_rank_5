@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include "iter.hpp"
 
 template <typename T>
@@ -6,7 +8,8 @@ void	printElement(T const & element)
 	std::cout << element << std::endl;
 }
 
-void	iteratingElement(int & n)
+template <typename T>
+void	increment(T & n)
 {
 	n++;
 }
@@ -21,29 +24,31 @@ void	printLength(std::string const & s)
 
 int	main()
 {
-	std::cout << "💥 Tableau int 💥" << std::endl;
+	std::cout << "--- int array ---" << std::endl;
 	int	intArray[] = {1, 2, 3, 4, 5};
-	::iter(intArray, 5, printElement<int>);
+	iter(intArray, 5, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "💥 Tableau int (modif) 💥" << std::endl;
-	::iter(intArray, 5, iteratingElement);
-	::iter(intArray, 5, printElement<int>);
+	std::cout << "--- int array (increment) ---" << std::endl;
+	iter(intArray, 5, increment<int>);
+	iter(intArray, 5, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "💥 Tableau strings 💥" << std::endl;
-	std::string	words[] = {"C'est", "l'histoire", "d'un", "pingouin", "qui", "respire", "par", "les", "fesses", "un","jour", "il", "s'assoit", "et", "il", "meurt"};
-	::iter(words, 16, printLength);
+	std::cout << "--- string array ---" << std::endl;
+	std::string	words[] = {"C'est", "l'histoire", "d'un", "pingouin", "qui", "respire",
+		"par", "les", "fesses", "un", "jour", "il", "s'assoit", "et", "il", "meurt"};
+	iter(words, 16, printLength);
 
 	std::cout << std::endl;
-	std::cout << "💥 Tableau const int 💥" << std::endl;
+	std::cout << "--- const int array ---" << std::endl;
 	int const	constIntArray[] = {10, 20, 30};
-	::iter(constIntArray, 3, printElement<int>);
+	iter(constIntArray, 3, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "💥 Tableau const strings 💥" << std::endl;
-	const std::string constWords[] = {"Desole", "pour", "cette", "vanne"};
-	::iter(constWords, 4, printLength);
+	std::cout << "--- char array (increment) ---" << std::endl;
+	char	charArray[] = {'H', 'e', 'l', 'l', 'o'};
+	iter(charArray, 5, increment<char>);
+	iter(charArray, 5, printElement<char>);
 
 	return (0);
 }
