@@ -19,7 +19,7 @@ Array<T>::Array(Array const & other) : _data(new T[other._size]()), _size(other.
 		_data[i] = other._data[i];
 }
 
-// Deep copy, free old memory
+// Deep copy + free
 template <typename T>
 Array<T> &	Array<T>::operator=(Array const & other)
 {
@@ -40,7 +40,7 @@ Array<T>::~Array()
 	delete[] _data;
 }
 
-// Throw if out of bounds
+// Throw si out of bounds
 template <typename T>
 T &	Array<T>::operator[](unsigned int index)
 {

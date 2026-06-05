@@ -24,28 +24,28 @@ void	printLength(std::string const & s)
 
 int	main()
 {
-	std::cout << "--- int array ---" << std::endl;
+	std::cout << "💥 Tableau int 💥" << std::endl;
 	int	intArray[] = {1, 2, 3, 4, 5};
 	iter(intArray, 5, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "--- int array (increment) ---" << std::endl;
+	std::cout << "💥 Tableau int (modif) 💥" << std::endl;
 	iter(intArray, 5, increment<int>);
 	iter(intArray, 5, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "--- string array ---" << std::endl;
+	std::cout << "💥 Tableau strings 💥" << std::endl;
 	std::string	words[] = {"C'est", "l'histoire", "d'un", "pingouin", "qui", "respire",
 		"par", "les", "fesses", "un", "jour", "il", "s'assoit", "et", "il", "meurt"};
 	iter(words, 16, printLength);
 
 	std::cout << std::endl;
-	std::cout << "--- const int array ---" << std::endl;
+	std::cout << "💥 Tableau const int 💥" << std::endl;
 	int const	constIntArray[] = {10, 20, 30};
 	iter(constIntArray, 3, printElement<int>);
 
 	std::cout << std::endl;
-	std::cout << "--- char array (increment) ---" << std::endl;
+	std::cout << "💥 Tableau char (increment) 💥" << std::endl;
 	char	charArray[] = {'H', 'e', 'l', 'l', 'o'};
 	iter(charArray, 5, increment<char>);
 	iter(charArray, 5, printElement<char>);
