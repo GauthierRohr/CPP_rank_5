@@ -3,12 +3,12 @@
 
 const char*	Span::SpanFullException::what() const throw()
 {
-	return ("Span is full, cannot add more numbers");
+	return ("JE SUIS REMPLI, JE PEUX PAS MANGER PLUS DE NOMBRES");
 }
 
 const char*	Span::NoSpanException::what() const throw()
 {
-	return ("Not enough numbers to compute a span (need at least 2)");
+	return ("RAJOUTE DES NOMBRES (besoin au moin de deux)");
 }
 
 Span::Span(unsigned int n) :
@@ -43,7 +43,6 @@ void	Span::addNumber(int number)
 	_numbers.push_back(number);
 }
 
-// Sort a copy, scan consecutive pairs for min gap
 int	Span::shortestSpan() const
 {
 	if (_numbers.size() < 2)
