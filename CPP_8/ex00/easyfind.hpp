@@ -3,6 +3,10 @@
 
 # include <algorithm>
 # include <stdexcept>
+# include <iostream>
+# include <vector>
+# include <list>
+# include <deque>
 
 // Trouve 1ere occurrence
 template <typename T>
