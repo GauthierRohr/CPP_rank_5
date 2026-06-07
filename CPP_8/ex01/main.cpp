@@ -5,7 +5,7 @@ int	main()
 	std::cout << "💥 Sujet 💥" << std::endl;
 	try
 	{
-		Span	sp(5);
+		Span		sp(5);
 		sp.addNumber(6);
 		sp.addNumber(3);
 		sp.addNumber(17);
@@ -23,7 +23,7 @@ int	main()
 	std::cout << "💥 Span plein 💥" << std::endl;
 	try
 	{
-		Span	sp(3);
+		Span		sp(3);
 		sp.addNumber(1);
 		sp.addNumber(2);
 		sp.addNumber(3);
@@ -38,7 +38,7 @@ int	main()
 	std::cout << "💥 moins de 2 nombres 💥" << std::endl;
 	try
 	{
-		Span	sp(5);
+		Span		sp(5);
 		sp.addNumber(42);
 		std::cout << "shortestSpan = " << sp.shortestSpan() << std::endl;
 	}
@@ -51,7 +51,7 @@ int	main()
 	std::cout << "💥 addRange avec 10 000 nombres 💥" << std::endl;
 	try
 	{
-		Span			sp(10000);
+		Span				sp(10000);
 		std::vector<int>	big;
 
 		for (int i = 0; i < 10000; i++)
@@ -70,7 +70,7 @@ int	main()
 	std::cout << "💥 addRange dépassement capacité 💥" << std::endl;
 	try
 	{
-		Span			sp(5);
+		Span				sp(5);
 		std::vector<int>	toomany;
 
 		for (int i = 0; i < 10; i++)
