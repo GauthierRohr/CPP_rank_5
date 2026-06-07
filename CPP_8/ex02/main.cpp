@@ -4,13 +4,18 @@
 
 int	main()
 {
-	std::cout << "💥 Sujet : MutantStack 💥" << std::endl;
+	std::cout << "💥 Test sujet 💥" << std::endl;
 	MutantStack<int>	mstack;
 	mstack.push(5);
 	mstack.push(17);
+
 	std::cout << "top = " << mstack.top() << std::endl;
+	
 	mstack.pop();
+	
 	std::cout << "size apres pop = " << mstack.size() << std::endl;
+	std::cout << "top = " << mstack.top() << std::endl;
+	
 	mstack.push(3);
 	mstack.push(5);
 	mstack.push(737);
@@ -29,7 +34,7 @@ int	main()
 	std::stack<int>	s(mstack);
 
 	std::cout << std::endl;
-	std::cout << "💥 Même test avec std::list (comparaison) 💥" << std::endl;
+	std::cout << "💥 Même test avec std list pour check💥" << std::endl;
 	std::list<int>	lst;
 	lst.push_back(5);
 	lst.push_back(3);
