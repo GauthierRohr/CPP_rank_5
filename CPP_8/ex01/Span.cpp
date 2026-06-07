@@ -1,4 +1,5 @@
 #include "Span.hpp"
+#include "algorithm"
 
 const char*	Span::SpanFullException::what() const throw()
 {

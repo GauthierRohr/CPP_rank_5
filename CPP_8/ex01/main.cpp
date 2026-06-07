@@ -1,11 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <cstdlib>
 #include "Span.hpp"
 
 int	main()
 {
-	std::cout << "=> Test sujet <=" << std::endl;
+	std::cout << "💥 Sujet 💥" << std::endl;
 	try
 	{
 		Span	sp(5);
@@ -23,7 +20,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test : Span plein <=" << std::endl;
+	std::cout << "💥 Span plein 💥" << std::endl;
 	try
 	{
 		Span	sp(3);
@@ -38,7 +35,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test : moins de 2 nombres <=" << std::endl;
+	std::cout << "💥 moins de 2 nombres 💥" << std::endl;
 	try
 	{
 		Span	sp(5);
@@ -51,7 +48,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test : addRange avec 10 000 nombres <=" << std::endl;
+	std::cout << "💥 addRange avec 10 000 nombres 💥" << std::endl;
 	try
 	{
 		Span			sp(10000);
@@ -70,7 +67,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test : addRange dépassement capacité <=" << std::endl;
+	std::cout << "💥 addRange dépassement capacité 💥" << std::endl;
 	try
 	{
 		Span			sp(5);

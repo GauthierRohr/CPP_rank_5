@@ -4,7 +4,7 @@
 
 int	main()
 {
-	std::cout << "=> Test sujet : MutantStack <=" << std::endl;
+	std::cout << "💥 Sujet : MutantStack 💥" << std::endl;
 	MutantStack<int>	mstack;
 	mstack.push(5);
 	mstack.push(17);
@@ -29,7 +29,7 @@ int	main()
 	std::stack<int>	s(mstack);
 
 	std::cout << std::endl;
-	std::cout << "=> Même test avec std::list (comparaison) <=" << std::endl;
+	std::cout << "💥 Même test avec std::list (comparaison) 💥" << std::endl;
 	std::list<int>	lst;
 	lst.push_back(5);
 	lst.push_back(3);
@@ -47,7 +47,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test : itérateur reverse <=" << std::endl;
+	std::cout << "💥 itérateur reverse 💥" << std::endl;
 	MutantStack<int>			rstack;
 	rstack.push(1);
 	rstack.push(2);

@@ -6,7 +6,7 @@
 
 int	main()
 {
-	std::cout << "=> Test 1 : vector<int> trouvé <=" << std::endl;
+	std::cout << "💥 vector<int> trouvé 💥" << std::endl;
 	std::vector<int>	vec;
 	vec.push_back(1);
 	vec.push_back(42);
@@ -23,7 +23,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test 2 : vector<int> non trouvé <=" << std::endl;
+	std::cout << "💥 vector<int> pas trouvé 💥" << std::endl;
 	try
 	{
 		std::vector<int>::iterator it = easyfind(vec, 100);
@@ -35,7 +35,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test 3 : list<int> trouvé <=" << std::endl;
+	std::cout << "💥 list<int> trouvé 💥" << std::endl;
 	std::list<int>	lst;
 	lst.push_back(10);
 	lst.push_back(20);
@@ -51,7 +51,7 @@ int	main()
 	}
 
 	std::cout << std::endl;
-	std::cout << "=> Test 4 : deque<int> non trouvé <=" << std::endl;
+	std::cout << "💥 deque<int> non trouvé 💥" << std::endl;
 	std::deque<int>	dq;
 	dq.push_back(5);
 	dq.push_back(15);

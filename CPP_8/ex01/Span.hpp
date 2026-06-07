@@ -2,8 +2,10 @@
 # define SPAN_HPP
 
 # include <vector>
-# include <exception>
+# include <iostream>
 # include <iterator>
+# include <cstdlib>
+# include <exception>
 
 class Span
 {
@@ -25,10 +27,8 @@ public:
 	Span &	operator=(Span const & other);
 	~Span();
 
-	// Add number; throw if full
 	void	addNumber(int number);
 
-	// Bulk-insert from iterator range
 	template <typename Iterator>
 	void	addRange(Iterator begin, Iterator end)
 	{
@@ -39,10 +39,7 @@ public:
 		_numbers.insert(_numbers.end(), begin, end);
 	}
 
-	// Smallest gap between any two numbers
 	int	shortestSpan() const;
-
-	// Largest gap (max - min)
 	int	longestSpan() const;
 
 private:
