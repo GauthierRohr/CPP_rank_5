@@ -2,15 +2,14 @@
 #include <iostream>
 #include <stdexcept>
 
-// Entry point: loads the bitcoin database CSV and processes the input file.
+// On charge la database CSV et le fichier input 
 // Usage: ./btc <input_file>
 int	main(int argument_count, char **argument_values)
 {
 	if (argument_count != 2)
 	{
-		std::cout << "Error: could not open file." << std::endl;
+		std::cout << "Error: usage : ./btc <input_file>" << std::endl;
 		return (1);
-		// 1: error — no input file provided
 	}
 
 	BitcoinExchange	exchange;

@@ -6,30 +6,19 @@
 #include <cstdlib>
 #include <cctype>
 
-// Default constructor
-BitcoinExchange::BitcoinExchange()
-{
-}
+BitcoinExchange::BitcoinExchange() {}
 
-// Copy constructor
 BitcoinExchange::BitcoinExchange(BitcoinExchange const & other) :
-	_exchange_rates(other._exchange_rates)
-{
-}
+	_exchange_rates(other._exchange_rates) {}
 
-// Copy assignment operator
 BitcoinExchange & BitcoinExchange::operator=(BitcoinExchange const & other)
 {
 	if (this != &other)
 		_exchange_rates = other._exchange_rates;
 	return (*this);
-	// *this: updated object with copied exchange rates
 }
 
-// Destructor
-BitcoinExchange::~BitcoinExchange()
-{
-}
+BitcoinExchange::~BitcoinExchange() {}
 
 // Checks whether a date string is valid (YYYY-MM-DD format, logical values).
 // Returns true if valid, false otherwise.
