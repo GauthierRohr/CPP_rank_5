@@ -35,18 +35,24 @@ bool	BitcoinExchange::isValidDate(std::string const & date) const
 		if (!std::isdigit(date[index]))
 			return (false);
 	}
+	int	year;
 	int	month;
 	int	day;
+	std::istringstream year_stream(date.substr(0, 4));
 	std::istringstream month_stream(date.substr(5, 2));
 	std::istringstream day_stream(date.substr(8, 2));
+	year_stream >> year;
 	month_stream >> month;
 	day_stream >> day;
+	if (year < 2009 || year > 2026)
+		return (false);
+	if (date < "2009-01-03")
+		return (false);
 	if (month < 1 || month > 12)
 		return (false);
 	if (day < 1 || day > 31)
 		return (false);
 	return (true);
-	// true: date passes format and range checks
 }
 
 // Parses a value string and stores the parsed double in out_value.
