@@ -31,17 +31,21 @@ std::vector<size_t> PmergeMe::jacobsthalOrder(size_t len)
 
 	std::vector<size_t> order;
 	order.push_back(0);
-	for (size_t k = 2; k < jacob.size(); k++)
+	size_t k = 2;
+	while (k < jacob.size())
 	{
 		size_t hi = std::min(jacob[k], len) - 1;
 		size_t lo = jacob[k - 1];
-		for (size_t idx = hi; idx >= lo && idx < len; idx--)
+		size_t idx = hi;
+		while (idx >= lo && idx < len)
 		{
 			if (idx != 0)
 				order.push_back(idx);
 			if (idx == 0)
 				break;
+			idx--;
 		}
+		k++;
 	}
 	return order;
 }

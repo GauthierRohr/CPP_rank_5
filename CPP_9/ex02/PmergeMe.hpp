@@ -17,13 +17,15 @@ class PmergeMe
 	{
 		size_t lo = 0;
 		size_t hi = 0;
-		for (size_t i = 0; i < chain.size(); i++)
+		size_t i = 0;
+		while (i < chain.size())
 		{
 			if (chain[i] == partner)
 			{
 				hi = i;
 				break;
 			}
+			i++;
 		}
 		while (lo < hi)
 		{
@@ -47,29 +49,36 @@ class PmergeMe
 			straggler = seq.back();
 
 		std::vector<std::pair<int, int> > pairs;
-		for (size_t i = 0; i + 1 < seq.size(); i += 2)
+		size_t i = 0;
+		while (i + 1 < seq.size())
 		{
 			if (seq[i] >= seq[i + 1])
 				pairs.push_back(std::make_pair(seq[i], seq[i + 1]));
 			else
 				pairs.push_back(std::make_pair(seq[i + 1], seq[i]));
+			i += 2;
 		}
 
 		C larger;
-		for (size_t i = 0; i < pairs.size(); i++)
-			larger.push_back(pairs[i].first);
 		C smaller;
-		for (size_t i = 0; i < pairs.size(); i++)
+		i = 0;
+		while (i < pairs.size())
+		{
+			larger.push_back(pairs[i].first);
 			smaller.push_back(pairs[i].second);
+			i++;
+		}
 
 		larger = mergeInsert(larger);
 
 		std::vector<size_t> order = jacobsthalOrder(smaller.size());
-		for (size_t i = 0; i < order.size(); i++)
+		i = 0;
+		while (i < order.size())
 		{
 			size_t idx = order[i];
 			typename C::iterator pos = binarySearch(larger, smaller[idx], pairs[idx].first);
 			larger.insert(pos, smaller[idx]);
+			i++;
 		}
 		if (odd)
 		{
@@ -83,11 +92,13 @@ class PmergeMe
 	void printContainer(C &c, std::string label)
 	{
 		std::cout << label;
-		for (size_t i = 0; i < c.size(); i++)
+		size_t i = 0;
+		while (i < c.size())
 		{
 			if (i > 0)
 				std::cout << " ";
 			std::cout << c[i];
+			i++;
 		}
 		std::cout << std::endl;
 	}
