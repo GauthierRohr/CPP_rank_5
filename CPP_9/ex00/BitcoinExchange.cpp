@@ -50,7 +50,12 @@ bool	BitcoinExchange::isValidDate(std::string const & date) const
 		return (false);
 	if (month < 1 || month > 12)
 		return (false);
-	if (day < 1 || day > 31)
+	int	days_in_month[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int	leap_years[] = {2012, 2016, 2020, 2024};
+	for (int k = 0; k < 4; k++)
+		if (year == leap_years[k])
+			days_in_month[2] = 29;
+	if (day < 1 || day > days_in_month[month])
 		return (false);
 	return (true);
 }
